@@ -167,8 +167,7 @@ function database_example_entry_delete($entry) {
  *   )->execute();
  * @endcode
  *
- * For more dynamic queries, Backdrop provides db_select(). See the
- * @link http://DOCUMENTATION_PENDING handbook page on dynamic queries @endlink.
+ * For more dynamic queries, Backdrop provides db_select().
  *
  * @code
  *   // SELECT * FROM {database_example} WHERE uid = 0 AND name = 'John'

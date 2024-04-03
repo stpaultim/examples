@@ -35,7 +35,7 @@
  * Backdrop is able to handle deletion of our content, including dependencies
  * based on re-use of our field instances, so we don't have to manage any of it.
  *
- * Consult @link field Field API @endlink.
+ * Consult the @link field Field API @endlink documentation.
  *
  * @see field_example.module
  */
@@ -135,10 +135,7 @@ function node_type_example_page() {
   );
   // Loop through each of our node_type_example nodes and instruct node_view()
   // to use our "node_type_example_list" view.
-  // See
-  // @link https://docs.backdropcms.org/api/backdrop/core%21modules%21node%21node.module/function/node_load/1 node_load()
-  // and
-  // @link https://docs.backdropcms.org/api/backdrop/core%21modules%21node%21node.module/function/node_view/1 node_view() @endlink.
+  // See node_load() and node_view().
   foreach ($result as $row) {
     $node = node_load($row->nid);
     $renderable_array['node_list'][] = node_view($node, 'node_type_example_list');

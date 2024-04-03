@@ -20,8 +20,8 @@
 /**
  * Implements hook_permission().
  *
- * In this case we're adding an addition permission that does the same
- * as the one the node module offers, just to demonstrate this error.
+ * In this case we're adding an additional permission that does the same as the
+ * one the node module offers, just to demonstrate this error.
  */
 function simpletest_example_permission() {
   $perms = array();
@@ -48,8 +48,8 @@ function simpletest_example_node_access($node, $op, $account) {
   //
   // This is the incorrect version we'll use to demonstrate test failure.
   // The correct version should have ($op == 'update' || $op == 'delete').
-  // The author had mistakenly always tested with User 1 so it always
-  // allowed access and the bug wasn't noticed!
+  // The author had mistakenly always tested with User 1 so it always allowed
+  // access and the bug wasn't noticed!
   if (($op == 'delete')  && (user_access('extra special edit any simpletest_example', $account) && ($account->uid == $node->uid))) {
     return NODE_ACCESS_ALLOW;
   }

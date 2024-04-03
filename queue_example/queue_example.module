@@ -24,10 +24,9 @@
  * default queue implementation, which is SystemQueue, that uses the persistent
  * database storage.
  *
- * Further resources include the limited @link queue @endlink documentation.
- * More:
- *
- * @link http://www.ent.iastate.edu/it/Batch_and_Queue.pdf Batch vs Queue Presentation slides by John VanDyk @endlink
+ * Further resources include the limited @link queue @endlink documentation and
+ * @link http://www.ent.iastate.edu/it/Batch_and_Queue.pdf Batch vs. Queue: an API Smackdown @endlink
+ * by John VanDyk.
  *
  * @see system.queue.inc
  */

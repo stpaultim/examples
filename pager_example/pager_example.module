@@ -14,8 +14,7 @@
  * reduce the number of output rows to the screen, and allow a user to scroll
  * through multiple screens of output.
  *
- * See:
- * - @link https://docs.backdropcms.org/api/backdrop/core%21includes%21pager.class.inc/class/PagerDefault/1 PagerDefault @endlink
+ * See PagerDefault.
  */
 
 /**
@@ -32,11 +31,10 @@ function pager_example_menu() {
 }
 
 /**
- * Build the pager query.
+ * Builds the pager.
  *
- * Uses the menu_links table since it is installed with several rows
- * in it and we don't have to create fake data in order to show
- * this example.
+ * Uses the menu_links table since it is installed with several rows in it and
+ * we don't have to create fake data in order to show this example.
  *
  * @return array
  *   A render array completely set up with a pager.

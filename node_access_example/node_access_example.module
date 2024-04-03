@@ -63,12 +63,11 @@
  *
  * Note that the hook_node_grants()/hook_node_access_records() layer is a
  * first-grant-wins system, which means a module using it can't deny access to
- * a node. Contributed modules have been developed to overcome this
- * shortcoming, with their own APIs, such as
- * @link http://backdropcms.org/project/acl ACL. @endlink ACL, in fact, has
+ * a node. Contributed modules have been developed to overcome this shortcoming,
+ * with their own APIs, such as
+ * @link http://backdropcms.org/project/acl ACL @endlink. ACL, in fact, has
  * emerged as the more-or-less standard solution for fine-grained access
- * control, and you really should be reading up on it. Many modules use it; if
- * your module implements another node access system, there could be chaos.
+ * control, and it used by many modules.
  *
  * @see node_access()
  * @see hook_node_access()

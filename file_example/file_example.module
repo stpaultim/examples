@@ -15,9 +15,8 @@
  * @link http://backdropcms.org/project/examples Examples for Developers @endlink
  * project page.
  *
- * See @link https://docs.backdropcms.org/api/backdrop/core%21modules%21file%21file.module/group/file-module-api/1 File module public API functions @endlink
- * and
- * @link https://docs.backdropcms.org/api/backdrop/core%21includes%21file.inc/group/file/1 File Interface @endlink
+ * See @link file-module-api File module public API functions @endlink and
+ * @link file File Interface @endlink.
  */
 
 /**

@@ -6,15 +6,15 @@
  *
  * Form elements are already familiar to anyone who uses Form API. They share
  * history with render elements, which are explained in the
- * @link render_example.module Render Example @endlink. Examples
- * of core form elements are 'textfield', 'checkbox' and 'fieldset'. Backdrop
- * utilizes hook_elements() to define these FAPI types, and this occurs in
- * the core function system_elements().
+ * @link render_example.module Render Example @endlink. Examples of core form
+ * elements are 'textfield', 'checkbox' and 'fieldset'. Backdrop utilizes
+ * hook_elements() to define these FAPI types, and this occurs in
+ * system_elements().
  *
- * Each form element has a #type value that determines how it is treated by
- * the Form API and how it is ultimately rendered into HTML.
- * hook_element_info() allows modules to define new element types, and tells
- * the Form API what default values they should automatically be populated with.
+ * Each form element has a #type value that determines how it is treated by the
+ * Form API and how it is ultimately rendered into HTML. hook_element_info()
+ * allows modules to define new element types, and tells the form API what
+ * default values they should automatically be populated with.
  *
  * By implementing hook_element_info() in your own module, you can create custom
  * form (or render) elements with their own properties, validation and theming.

@@ -13,8 +13,7 @@
  * This is an example describing how a module can display data in a sortable
  * table.
  *
- * See:
- * - @link https://docs.backdropcms.org/api/backdrop/core%21includes%21tablesort.class.inc/class/TableSort/1 TableSort @endlink
+ * See TableSort.
  */
 
 /**
@@ -31,7 +30,7 @@ function tablesort_example_menu() {
 }
 
 /**
- * Build the table render array.
+ * Builds the table render array.
  *
  * @return array
  *   A render array set for theming by theme_table().

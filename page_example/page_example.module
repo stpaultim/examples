@@ -73,9 +73,10 @@ function page_example_permission() {
 function page_example_menu() {
 
   // This is the minimum information you can provide for a menu item. This menu
-  // item will be created in the default menu, usually Navigation.
+  // item will be created in the Primary Navigation (main-menu).
   $items['examples/page_example'] = array(
     'title' => 'Page Example',
+    'menu_name' => 'main-menu',
     'page callback' => 'page_example_description',
     'access callback' => TRUE,
     'expanded' => TRUE,

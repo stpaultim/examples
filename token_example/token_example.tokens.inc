@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Token callbacks for the token_example module.
@@ -76,7 +75,7 @@ function token_example_tokens($type, $tokens, array $data = array(), array $opti
           break;
 
         case 'name':
-          // Since the format name is user-entered text, santize when requested.
+          // Since the format name is user-entered text, sanitize when requested.
           $replacements[$original] = $sanitize ? filter_xss($format->name) : $format->name;
           break;
       }

@@ -1,21 +1,19 @@
 <?php
-
 /**
  * @file
- * Outlines how a module can use the Batch API.
+ * Hook implementations for the Batch Example module.
  */
 
 /**
  * @defgroup batch_example Example: Batch API
  * @ingroup examples
  * @{
- * Outlines how a module can use the Batch API.
+ * This example demonstrates how a module can use the Batch API.
  *
- * Batches allow heavy processing to be spread out over several page
- * requests, ensuring that the processing does not get interrupted
- * because of a PHP timeout, while allowing the user to receive feedback
- * on the progress of the ongoing operations. It also can prevent out of memory
- * situations.
+ * Batches allow heavy processing to be spread out over several page requests,
+ * ensuring that the processing does not get interrupted because of a PHP
+ * timeout, while allowing the user to receive feedback on the progress of the
+ * ongoing operations. It also can prevent out of memory situations.
  *
  * The @link batch_example.install .install file @endlink also shows how the
  * Batch API can be used to handle long-running hook_update_N() functions.
@@ -146,8 +144,11 @@ function batch_example_op_1($nid, $operation_details, &$context) {
   // 'finished' function (in this example, batch_example_finished()).
   $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
 
-  // Optional message displayed under the progressbar.
-  $context['message'] = t('Loading node "@title"', array('@title' => $node->title)) . ' ' . $operation_details;
+  // Optional message displayed under the progress bar.
+  // $operations_details is a translated string passed to the batch operation
+  // callback.
+  $context['message'] = t('Loading node "@title"', array('@title' => $node->title));
+  $context['message'] .= ' ' . $operation_details;
 
   _batch_example_update_http_requests();
 }
@@ -224,7 +225,7 @@ function batch_example_op_2($operation_details, &$context) {
   // the operation itself is interruptible.
   $limit = 5;
 
-  // Retrieve the next group of nids.
+  // Retrieve the next group of node IDs.
   $result = db_select('node', 'n')
     ->fields('n', array('nid'))
     ->orderBy('n.nid', 'ASC')
@@ -305,7 +306,7 @@ function _batch_example_update_http_requests() {
 
 /**
  * Utility function to count the HTTP requests in a session variable.
- * 
+ *
  * @return int
  *   Number of requests.
  */

@@ -1,7 +1,8 @@
 name = Entity Example
-description = A simple entity example showing the main steps required to set up your own entity.
+description = A simple example showing the main steps required to set up a custom entity.
 package = Example modules
 version = BACKDROP_VERSION
 backdrop = 1.x
+type = module
 dependencies[] = field
 configure = admin/structure/entity_example_basic/manage

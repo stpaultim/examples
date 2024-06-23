@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Progress bar example.
@@ -10,7 +9,7 @@
  *
  * Build a landing-page form for the progress bar example.
  *
- * @see https://api.drupal.org/api/drupal/developer%21topics%21forms_api_reference.html/7#ajax_progress
+ * @see https://docs.backdropcms.org/form_api#ajax['progress']
  */
 function ajax_example_progressbar_form($form, &$form_state) {
   $form_state['time'] = REQUEST_TIME;
@@ -43,7 +42,7 @@ function ajax_example_progressbar_form($form, &$form_state) {
 }
 
 /**
- * Get the progress bar execution status, as JSON.
+ * Get the progress bar execution status as JSON.
  *
  * This is the menu handler for
  * examples/ajax_example/progressbar/progress/$time.
@@ -60,7 +59,7 @@ function ajax_example_progressbar_form($form, &$form_state) {
  * client-side JavaScript.
  *
  * @param int $time
- *   Timestamp.
+ *   The timestamp.
  *
  * @see ajax_example_progressbar_callback()
  */
@@ -70,14 +69,14 @@ function ajax_example_progressbar_progress($time) {
     'percentage' => -1,
   );
 
-  $completed_percentage = config_get('ajax_example.settings', 'example_progressbar_' . $time);
+  $completed_percentage = tempstore_get('ajax_example', 'progressbar_' . $time);
 
   if ($completed_percentage) {
     $progress['message'] = t('Executing...');
     $progress['percentage'] = $completed_percentage;
   }
 
-  drupal_json_output($progress);
+  backdrop_json_output($progress);
 }
 
 /**
@@ -94,18 +93,18 @@ function ajax_example_progressbar_progress($time) {
  * @see ajax_example_progressbar_progress()
  */
 function ajax_example_progressbar_callback($form, &$form_state) {
-  $variable_name = 'example_progressbar_' . $form_state['time'];
+  $name = 'progressbar_' . $form_state['time'];
   $commands = array();
 
-  config_set('ajax_example.settings', $variable_name, 10);
+  tempstore_set('ajax_example', $name, 10, REQUEST_TIME + 60);
   sleep(2);
-  config_set('ajax_example.settings', $variable_name, 40);
+  tempstore_set('ajax_example', $name, 40, REQUEST_TIME + 60);
   sleep(2);
-  config_set('ajax_example.settings', $variable_name, 70);
+  tempstore_set('ajax_example', $name, 70, REQUEST_TIME + 60);
   sleep(2);
-  config_set('ajax_example.settings', $variable_name, 90);
+  tempstore_set('ajax_example', $name, 90, REQUEST_TIME + 60);
   sleep(2);
-  config_set('ajax_example.settings', $variable_name, NULL);
+  tempstore_clear('ajax_example', $name);
 
   $commands[] = ajax_command_html('#progress-status', t('Executed.'));
 

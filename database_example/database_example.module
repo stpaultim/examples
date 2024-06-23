@@ -1,0 +1,516 @@
+<?php
+/**
+ * @file
+ * Hook implementations for the Database Example module.
+ *
+ * @todo Demonstrate transaction usage.
+ */
+
+/**
+ * @defgroup database_example Example: Database
+ * @ingroup examples
+ * @{
+ * This example demonstrates how to use the database API.
+ *
+ * General documentation is available at
+ * @link database Database abstraction layer @endlink.
+ *
+ * The several examples here demonstrate basic database usage.
+ *
+ * The usage of db_query() for INSERT, UPDATE, or DELETE is deprecated, because
+ * it is database-dependent. Instead, specific functions are provided to perform
+ * these operations: db_insert(), db_update(), and db_delete() do the job now.
+ * (Note that backdrop_write_record() is also deprecated.)
+ *
+ * db_insert() example:
+ * @code
+ *   // INSERT INTO {database_example} (name, surname) VALUES('John, 'Doe')
+ *   db_insert('database_example')
+ *     ->fields(array('name' => 'John', 'surname' => 'Doe'))
+ *     ->execute();
+ * @endcode
+ *
+ * db_update() example:
+ * @code
+ *   // UPDATE {database_example} SET name = 'Jane' WHERE name = 'John'
+ *   db_update('database_example')
+ *     ->fields(array('name' => 'Jane'))
+ *     ->condition('name', 'John')
+ *     ->execute();
+ * @endcode
+ *
+ * db_delete() example:
+ * @code
+ *   // DELETE FROM {database_example} WHERE name = 'Jane'
+ *   db_delete(database_example')
+ *     ->condition('name', 'Jane')
+ *     ->execute();
+ * @endcode
+ *
+ * See @link database Database Abstraction Layer @endlink
+ * @see db_insert()
+ * @see db_update()
+ * @see db_delete()
+ * @see backdrop_write_record()
+ */
+
+/**
+ * Saves an entry in the database using db_insert().
+ *
+ * In Drupal 6, this would have been:
+ * @code
+ *   db_query(
+ *     "INSERT INTO {database_example} (name, surname, age)
+ *       VALUES ('%s', '%s', '%d')",
+ *     $entry['name'],
+ *     $entry['surname'],
+ *     $entry['age']
+ *   );
+ * @endcode
+ *
+ * Exception handling is shown in this example. It could be simplified without
+ * the try/catch blocks, but since an insert will throw an exception and
+ * terminate your application if the exception is not handled, it is best to
+ * employ try/catch.
+ *
+ * @param array $entry
+ *   An array containing all the fields of the database record.
+ *
+ * @see db_insert()
+ */
+function database_example_entry_insert($entry) {
+  $return_value = NULL;
+
+  try {
+    $return_value = db_insert('database_example')
+      ->fields($entry)
+      ->execute();
+  }
+  catch (Exception $e) {
+    backdrop_set_message(t('db_insert() failed. Message = %message, query = %query', array('%message' => $e->getMessage(), '%query' => $e->query_string)), 'error');
+  }
+
+  return $return_value;
+}
+
+/**
+ * Updates an entry in the database.
+ *
+ * The former, deprecated techniques used db_query() or backdrop_write_record():
+ * @code
+ *  backdrop_write_record('database_example', $entry, $entry['pid']);
+ * @endcode
+ *
+ * @code
+ *  db_query(
+ *    "UPDATE {database_example}
+ *     SET name = '%s', surname = '%s', age = '%d'
+ *     WHERE pid = %d",
+ *     $entry['pid']
+ *  );
+ * @endcode
+ *
+ * @param array $entry
+ *   An array containing all the fields of the item to be updated.
+ *
+ * @see db_update()
+ */
+function database_example_entry_update($entry) {
+  try {
+    // db_update()->execute() returns the number of updated rows.
+    $count = db_update('database_example')
+      ->fields($entry)
+      ->condition('pid', $entry['pid'])
+      ->execute();
+  }
+  catch (Exception $e) {
+    backdrop_set_message(t('db_update failed. Message = %message, query= %query', array('%message' => $e->getMessage(), '%query' => $e->query_string)), 'error');
+  }
+
+  return $count;
+}
+
+/**
+ * Deletes an entry from the database.
+ *
+ * The usage of db_query() is deprecated except for static queries. Formerly, a
+ * deletion might have been accomplished like this:
+ * @code
+ *  db_query("DELETE FROM {database_example} WHERE pid = %d", $entry['pid]);
+ * @endcode
+ *
+ * @param array $entry
+ *   An array containing at least the person identifier 'pid' element of the
+ *   entry to delete.
+ *
+ * @see db_delete()
+ */
+function database_example_entry_delete($entry) {
+  db_delete('database_example')
+    ->condition('pid', $entry['pid'])
+    ->execute();
+}
+
+/**
+ * Reads from the database using a filter array.
+ *
+ * Backdrop provides an abstracted interface that will work with a wide variety
+ * of database engines.
+ *
+ * db_query() is deprecated except when doing a static query. The following code
+ * is perfectly acceptable in Backdrop.
+ *
+ * @code
+ *   // SELECT * FROM {database_example} WHERE uid = 0 AND name = 'John'
+ *   db_query("SELECT * FROM {database_example} WHERE uid = :uid and name = :name",
+ *     array(':uid' => 0, ':name' => 'John')
+ *   )->execute();
+ * @endcode
+ *
+ * For more dynamic queries, Backdrop provides db_select().
+ *
+ * @code
+ *   // SELECT * FROM {database_example} WHERE uid = 0 AND name = 'John'
+ *   db_select('database_example')
+ *     ->fields('database_example')
+ *     ->condition('uid', 0)
+ *     ->condition('name', 'John')
+ *     ->execute();
+ * @endcode
+ *
+ * With named placeholders, the code becomes the following
+ * @code
+ *   // SELECT * FROM {database_example} WHERE uid = 0 AND name = 'John'
+ *   $arguments = array(':name' => 'John', ':uid' => 0);
+ *   db_select('database_example')
+ *     ->fields('database_example')
+ *     ->where('uid = :uid AND name = :name', $arguments)
+ *     ->execute();
+ * @endcode
+ *
+ * Conditions are stacked and evaluated as AND or OR depending on the type of
+ * query. The condition argument is an 'equal' evaluation by default, but this
+ * can be altered, like in the following snippet.
+ *
+ * @code
+ *   // SELECT * FROM {database_example} WHERE age > 18
+ *   db_select('database_example')
+ *     ->fields('database_example')
+ *     ->condition('age', 18, '>')
+ *     ->execute();
+ * @endcode
+ *
+ * @param array $entry
+ *   An array containing all the fields used to search the entries in the table.
+ *
+ * @return array
+ *   An array containing the loaded entries, if found.
+ *
+ * @see db_select()
+ * @see db_query()
+ */
+function database_example_entry_load($entry = array()) {
+  // Read all fields from the database_example table.
+  $select = db_select('database_example', 'example');
+  $select->fields('example');
+
+  // Add each field and value as a condition to this query.
+  foreach ($entry as $field => $value) {
+    $select->condition($field, $value);
+  }
+
+  return $select->execute()->fetchAll();
+}
+
+/**
+ * Renders a filtered list of entries in the database.
+ *
+ * Backdrop helps in processing queries that return several rows, providing the
+ * found objects in the same query execution call.
+ *
+ * This function queries the database using a JOIN between the users and the
+ * example entries, to provide the username that created the entry; then, it
+ * creates a table with the results, processing each row.
+ *
+ * SELECT
+ *  e.pid as pid, e.name as name, e.surname as surname, e.age as age
+ *  u.name as username
+ * FROM
+ *  {database_example} e
+ * JOIN
+ *  users u ON e.uid = u.uid
+ * WHERE
+ *  e.name = 'John' AND e.age > 18
+ *
+ * @see db_select()
+ */
+function database_example_advanced_list() {
+  $output = '';
+
+  $select = db_select('database_example', 'e');
+  // Join the users table, so we can get the entry creator's username.
+  $select->join('users', 'u', 'e.uid = u.uid');
+  // Select these specific fields for the output.
+  $select->addField('e', 'pid');
+  $select->addField('u', 'name', 'username');
+  $select->addField('e', 'name');
+  $select->addField('e', 'surname');
+  $select->addField('e', 'age');
+  // Filter only users named "John".
+  $select->condition('e.name', 'John');
+  // Filter only users older than 18 years.
+  $select->condition('e.age', 18, '>');
+  // Make sure we only get items 0-49, for scalability reasons.
+  $select->range(0, 50);
+
+  // Now, loop all these entries and show them in a table. The following line
+  // could have been written as $entries = $select->execute()->fetchAll() which
+  // would return each record as an object instead of an array.
+  $entries = $select->execute()->fetchAll(PDO::FETCH_ASSOC);
+  if (!empty($entries)) {
+    $rows = array();
+    foreach ($entries as $entry) {
+      // Sanitize the data before handing it off to the theme layer.
+      $rows[] = array_map('check_plain', $entry);
+    }
+    // Make a table for them.
+    $header = array(t('Id'), t('Created by'), t('Name'), t('Surname'), t('Age'));
+    $output .= theme('table', array('header' => $header, 'rows' => $rows));
+  }
+  else {
+    backdrop_set_message(t('No entries meet the filter criteria (Name = "John" and Age > 18).'));
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * Sets up calls to backdrop_get_form() for all our example cases.
+ */
+function database_example_menu() {
+  $items = array();
+
+  $items['examples/database'] = array(
+    'title' => 'Database Example',
+    'page callback' => 'database_example_list',
+    'access callback' => TRUE,
+  );
+  $items['examples/database/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['examples/database/add'] = array(
+    'title' => 'Add entry',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('database_example_form_add'),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -9,
+  );
+  $items['examples/database/update'] = array(
+    'title' => 'Update entry',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('database_example_form_update'),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => TRUE,
+    'weight' => -5,
+  );
+  $items['examples/database/advanced'] = array(
+    'title' => 'Advanced list',
+    'page callback' => 'database_example_advanced_list',
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Renders a list of entries in the database.
+ */
+function database_example_list() {
+  $output = '';
+
+  // Get all entries in the database_example table.
+  if ($entries = database_example_entry_load()) {
+    $rows = array();
+    foreach ($entries as $entry) {
+      // Sanitize the data before handing it off to the theme layer.
+      $rows[] = array_map('check_plain', (array) $entry);
+    }
+    // Make a table for them.
+    $header = array(t('Id'), t('uid'), t('Name'), t('Surname'), t('Age'));
+    $output .= theme('table', array('header' => $header, 'rows' => $rows));
+  }
+  else {
+    backdrop_set_message(t('No entries have been added yet.'));
+  }
+  return $output;
+}
+
+/**
+ * Prepares a simple form to add an entry, with all the interesting fields.
+ */
+function database_example_form_add($form, &$form_state) {
+  $form = array();
+
+  $form['add'] = array(
+    '#type'  => 'fieldset',
+    '#title' => t('Add a person entry'),
+  );
+  $form['add']['name'] = array(
+    '#type'  => 'textfield',
+    '#title' => t('Name'),
+    '#size'  => 15,
+  );
+  $form['add']['surname'] = array(
+    '#type'  => 'textfield',
+    '#title' => t('Surname'),
+    '#size'  => 15,
+  );
+  $form['add']['age'] = array(
+    '#type'  => 'textfield',
+    '#title' => t('Age'),
+    '#size'  => 5,
+    '#description' => t("Values greater than 127 will cause an exception. Try it; it's a great example why exception handling is needed."),
+  );
+  $form['add']['submit'] = array(
+    '#type'  => 'submit',
+    '#value' => t('Add'),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for 'add entry' form.
+ */
+function database_example_form_add_submit($form, &$form_state) {
+  global $user;
+
+  // Save the submitted entry.
+  $entry = array(
+    'name'    => $form_state['values']['name'],
+    'surname' => $form_state['values']['surname'],
+    'age'     => $form_state['values']['age'],
+    'uid'     => $user->uid,
+  );
+  $return = database_example_entry_insert($entry);
+  if ($return) {
+    backdrop_set_message(t("Created entry @entry", array('@entry' => print_r($entry, TRUE))));
+  }
+}
+
+/**
+ * Sample UI to update a record.
+ */
+function database_example_form_update($form, &$form_state) {
+  $form = array(
+    '#prefix' => '<div id="updateform">',
+    '#suffix' => '</div>',
+  );
+
+  $entries = database_example_entry_load();
+  $keyed_entries = array();
+  $options = array();
+
+  if (empty($entries)) {
+    $form['no_values'] = array(
+      '#value' => t("No entries exist in the table database_example table."),
+    );
+    return $form;
+  }
+
+  foreach ($entries as $entry) {
+    $options[$entry->pid] = t("@pid: @name @surname (@age)",
+      array(
+        '@pid' => $entry->pid,
+        '@name' => $entry->name,
+        '@surname' => $entry->surname,
+        '@age' => $entry->age,
+      )
+    );
+    $keyed_entries[$entry->pid] = $entry;
+  }
+  $default_entry = !empty($form_state['values']['pid']) ? $keyed_entries[$form_state['values']['pid']] : $entries[0];
+
+  $form_state['entries'] = $keyed_entries;
+
+  $form['pid'] = array(
+    '#type' => 'select',
+    '#options' => $options,
+    '#title' => t('Choose entry to update'),
+    '#default_value' => $default_entry->pid,
+    '#ajax' => array(
+      'wrapper' => 'updateform',
+      'callback' => 'database_example_form_update_callback',
+    ),
+  );
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Updated first name'),
+    '#size' => 15,
+    '#default_value' => $default_entry->name,
+  );
+
+  $form['surname'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Updated last name'),
+    '#size' => 15,
+    '#default_value' => $default_entry->surname,
+  );
+  $form['age'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Updated age'),
+    '#size' => 4,
+    '#default_value' => $default_entry->age,
+    '#description' => t("Values greater than 127 will cause an exception"),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Update'),
+  );
+  return $form;
+}
+
+/**
+ * AJAX callback handler for the pid select.
+ *
+ * When the pid changes, populates the defaults from the database in the form.
+ */
+function database_example_form_update_callback($form, $form_state) {
+  $entry = $form_state['entries'][$form_state['values']['pid']];
+  // Setting the #value of items is the only way I was able to figure out to get
+  // replaced defaults on these items. #default_value will not do it and should
+  // not.
+  foreach (array('name', 'surname', 'age') as $item) {
+    $form[$item]['#value'] = $entry->$item;
+  }
+  return $form;
+}
+
+/**
+ * Submit handler for the 'update entry' form.
+ */
+function database_example_form_update_submit($form, &$form_state) {
+  global $user;
+
+  // Save the submitted entry.
+  $entry = array(
+    'pid' => $form_state['values']['pid'],
+    'name' => $form_state['values']['name'],
+    'surname' => $form_state['values']['surname'],
+    'age' => $form_state['values']['age'],
+    'uid' => $user->uid,
+  );
+  $count = database_example_entry_update($entry);
+  backdrop_set_message(t("Updated entry @entry (@count row updated)", array('@count' => $count, '@entry' => print_r($entry, TRUE))));
+}
+
+/**
+ * @} End of "defgroup database_example".
+ */

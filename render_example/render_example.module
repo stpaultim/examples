@@ -1,22 +1,24 @@
 <?php
-
 /**
  * @file
- * Demonstrates render arrays.
+ * Hook implementations for the Render Example module.
  */
 
 /**
  * @defgroup render_example Example: Render
  * @ingroup examples
  * @{
- * Demonstrate how render arrays are arranged and how they can be altered.
- * This alters blocks and the page to show the actual render array
- * that is being used to create each item.
+ * This example demonstrates how render arrays are arranged and how they can be
+ * altered.
+ * This alters blocks and the page to show the actual render array used to
+ * create each item.
  *
  * @see backdrop_render()
  */
 
-// This allows backdrop_var_export() to work.
+/**
+ * This allows backdrop_var_export() to work.
+ */
 require_once BACKDROP_ROOT . '/core/includes/utility.inc';
 
 /**
@@ -182,10 +184,8 @@ function render_example_arrays() {
 function render_example_cache_pre_render($element) {
   $element['#markup'] = render_example_cache_expensive();
 
-  // The following line is due to the bug described in
-  // http://DOCUMENTATION_PENDING/node/914792. A #markup element's #pre_render must set
-  // #children because it replaces the default #markup pre_render, which is
-  // backdrop_pre_render_markup().
+  // @todo Correct the following code, since the workaround is not necessary.
+  // See https://www.drupal.org/node/914792
   $element['#children'] = $element['#markup'];
   return $element;
 }
@@ -217,10 +217,8 @@ function render_example_cache_expensive() {
 function render_example_add_suffix($element) {
   $element['#suffix'] = '<div style="color:red">' . t('This #suffix was added by a #pre_render') . '</div>';
 
-  // The following line is due to the bug described in
-  // http://DOCUMENTATION_PENDING/node/914792. A #markup element's #pre_render must set
-  // #children because it replaces the default #markup pre_render, which is
-  // backdrop_pre_render_markup().
+  // @todo Correct the following code, since the workaround is not necessary.
+  // See https://www.drupal.org/node/914792
   $element['#children'] = $element['#markup'];
   return $element;
 }

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * This is an example demonstrating how a module can define custom form and
@@ -7,15 +6,15 @@
  *
  * Form elements are already familiar to anyone who uses Form API. They share
  * history with render elements, which are explained in the
- * @link render_example.module Render Example @endlink. Examples
- * of core form elements are 'textfield', 'checkbox' and 'fieldset'. Backdrop
- * utilizes hook_elements() to define these FAPI types, and this occurs in
- * the core function system_elements().
+ * @link render_example.module Render Example @endlink. Examples of core form
+ * elements are 'textfield', 'checkbox' and 'fieldset'. Backdrop utilizes
+ * hook_elements() to define these FAPI types, and this occurs in
+ * system_elements().
  *
- * Each form element has a #type value that determines how it is treated by
- * the Form API and how it is ultimately rendered into HTML.
- * hook_element_info() allows modules to define new element types, and tells
- * the Form API what default values they should automatically be populated with.
+ * Each form element has a #type value that determines how it is treated by the
+ * Form API and how it is ultimately rendered into HTML. hook_element_info()
+ * allows modules to define new element types, and tells the form API what
+ * default values they should automatically be populated with.
  *
  * By implementing hook_element_info() in your own module, you can create custom
  * form (or render) elements with their own properties, validation and theming.
@@ -59,14 +58,14 @@
  * - form_example_textfield: This is actually just a textfield, but provides
  *   the new type. If more were to be done with it a theme function could be
  *   provided.
- * - form_example_checkbox: Nothing more than a regular checkbox, but uses
+ * - form_example_checkbox: Nothing more than a regular checkbox, but it uses
  *   an alternate theme function provided by this module.
  * - form_example_phonenumber_discrete: Provides a North-American style
- *   three-part phonenumber where the value of the phonenumber is managed
- *   as an array of three parts.
+ *   three-part phone-number, where the phone-number value is as an array of
+ *   three parts.
  * - form_example_phonenumber_combined: Provides a North-American style
- *   three-part phonenumber where the actual value is managed as a 10-digit
- *   string and only broken up into three parts for the user interface.
+ *   three-part phone-number where the actual value is a 10-digit string which
+ *   is broken up into three parts for the user interface.
  *
  * form_builder() has significant discussion of #process and #value_callback.
  * See also hook_element_info().
@@ -404,7 +403,7 @@ function theme_form_example_inline_form_element($variables) {
   if (isset($element['#markup']) && !empty($element['#id'])) {
     $attributes['id'] = $element['#id'];
   }
-  // Add element's #type and #name as class to aid with JS/CSS selectors.
+  // Add #type and #name as class to aid with JavaScript/CSS selectors.
   $attributes['class'] = array('form-item');
   if (!empty($element['#type'])) {
     $attributes['class'][] = 'form-type-' . strtr($element['#type'], '_', '-');

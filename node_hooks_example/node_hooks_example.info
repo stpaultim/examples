@@ -1,0 +1,6 @@
+name = Node Hooks Example
+description = Demonstrates how to use hook_node_*().
+package = Example modules
+version = BACKDROP_VERSION
+backdrop = 1.x
+type = module

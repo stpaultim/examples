@@ -1,19 +1,17 @@
 <?php
-
 /**
  * @file
- * Implements the basic functionality required to create and display an entity.
+ * Hook implementations for the Entity Example module.
  *
- * @todo: Define EntityExampleBasic types in code
- * @todo: Add a single field
+ * @todo Define EntityExampleBasic types in code
+ * @todo Add a single field
  */
 
 /**
  * @defgroup entity_example Example: Entity
  * @ingroup examples
  * @{
- * Example creating a core Entity API entity.
- *
+ * This example demonstrates how to create an entity.
  */
 
 /**
@@ -29,6 +27,9 @@ function entity_example_entity_info() {
     // A human readable label to identify our entity.
     'label' => t('Example Basic Entity'),
 
+    // A human readable bundle label.
+    'bundle label' => t('Type'),
+
     // (Required) The entity class for our Entity, extending the core Backdrop
     // Entity class.
     'entity class' => 'EntityExampleBasic',
@@ -42,7 +43,7 @@ function entity_example_entity_info() {
     // Returns the uri elements of an entity.
     'uri callback' => 'entity_example_basic_uri',
 
-    // IF fieldable == FALSE, we can't attach fields.
+    // When fieldable is set to FALSE, we can't attach fields.
     'fieldable' => TRUE,
 
     // entity_keys tells the controller what database fields are used for key
@@ -53,6 +54,7 @@ function entity_example_entity_info() {
       'id' => 'basic_id' ,
       // Bundle will be determined by the 'bundle_type' field.
       'bundle' => 'bundle_type',
+      'label' => 'item_description',
     ),
     'bundle keys' => array(
       'bundle' => 'bundle_type',

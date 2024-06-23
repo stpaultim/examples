@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Example modules
@@ -11,7 +10,7 @@
  * @link cache_example.module Demonstrate Backdrop caching @endlink
  * @link contextual_links_example.module Defining contextual links @endlink
  * @link cron_example.module Using hook_cron() and hook_cron_queue_info() @endlink
- * @link dbtng_example.module Database examples (DBTNG) @endlink
+ * @link database_example.module Database examples @endlink
  * @link email_example.module Sending e-mail @endlink
  * @link entity_example.module Creating and managing a custom entity @endlink
  * @link field_example.module Defining fields in the field API @endlink
@@ -19,11 +18,11 @@
  * @link filter_example.module Defining an input filter @endlink
  * @link form_example.module Form API examples, including multistep forms @endlink
  * @link image_example.module Demonstrates image handling with styles and effects @endlink
- * @link js_example.module Javascript examples @endlink
+ * @link js_example.module JavaScript examples @endlink
  * @link menu_example.module Menu API examples @endlink
- * @link nodeapi_example.module Node API demonstrations showing how a separate module can change the behavior of a node @endlink
+ * @link node_hooks_example.module Demonstrations showing how a module can change a node @endlink
  * @link node_access_example.module Define custom node access fules using node access hooks @endlink
- * @link node_example.module Creating custom node types, with fields @endlink
+ * @link node_type_example.module Creating custom node types, with fields @endlink
  * @link page_example.module Creating a custom page @endlink
  * @link pager_example.module Using a table with a pager @endlink
  * @link queue_example.module Using the Queue API @endlink

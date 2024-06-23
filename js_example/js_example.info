@@ -1,5 +1,6 @@
-name = JS Example
-description = An example module showing how to use some of the new JavaScript features in Backdrop.
+name = JavaScript Example
+description = An example module showing how to use some of the JavaScript features.
 package = Example modules
 version = BACKDROP_VERSION
 backdrop = 1.x
+type = module

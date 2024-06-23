@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Install, update, and uninstall functions for the batch_example module.
@@ -9,7 +8,7 @@
  * Example of batch-driven update function.
  *
  * Because some update functions may require the batch API, the $sandbox
- * provides a place to store state. When $standbox['#finished'] == TRUE,
+ * provides a place to store state. When $sandbox['#finished'] == TRUE,
  * calls to this update function are completed.
  *
  * The $sandbox param provides a way to store data during multiple invocations.
@@ -25,8 +24,6 @@
  * @ingroup batch_example
  */
 function batch_example_update_1100(&$sandbox) {
-  $ret = array();
-
   // Use the sandbox at your convenience to store the information needed
   // to track progression between successive calls to the function.
   if (!isset($sandbox['progress'])) {
@@ -46,7 +43,7 @@ function batch_example_update_1100(&$sandbox) {
   // progress feedback to the user and wait for the next request.
   $limit = 10;
 
-  // Retrieve the next group of nids.
+  // Retrieve the next group of node IDs.
   $result = db_select('node', 'n')
     ->fields('n', array('nid'))
     ->orderBy('n.nid', 'ASC')
@@ -74,7 +71,9 @@ function batch_example_update_1100(&$sandbox) {
   $sandbox_status = $sandbox;
   // Don't want them in the output.
   unset($sandbox_status['messages']);
-  $sandbox['messages'][] = t('$sandbox=') . print_r($sandbox_status, TRUE);
+  $sandbox['messages'][] = t('$sandbox=@sandbox_status', array(
+    '@sandbox_status' => print_r($sandbox_status, TRUE),
+  ));
 
   if ($sandbox['#finished']) {
     // hook_update_N() may optionally return a string which will be displayed

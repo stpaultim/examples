@@ -88,7 +88,13 @@ function menu_example_menu() {
   //
   // First, provide a courtesy menu item that mentions the existence of the
   // permissioned item.
-
+  $items['examples/menu_example/permissioned'] = array(
+    'title' => 'Permissioned Example',
+    'page callback' => '_menu_example_menu_page',
+    'page arguments' => array(t('A menu item that requires the "access protected menu example" permission is at <a href="!link">examples/menu_example/permissioned/controlled</a>', array('!link' => url('examples/menu_example/permissioned/controlled')))),
+    'access callback' => TRUE,
+    'expanded' => TRUE,
+  );
 
   // Now provide the actual permissioned menu item.
   $items['examples/menu_example/permissioned/controlled'] = array(

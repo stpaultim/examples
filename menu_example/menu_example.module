@@ -46,7 +46,7 @@ function menu_example_menu() {
 
     // Description (hover flyover for menu link). Does NOT use t(), which is
     // called automatically.
-    'description' => 'Simplest possible menu link that is not visible to anyone yet.',
+    'description' => 'Simplest possible menu type, and the parent menu entry for others.',
 
     // Function to be called when this path is accessed.
     'page callback' => '_menu_example_basic_instructions',

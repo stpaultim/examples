@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Module file for page_example_module.
+ * Hook implementations for the Page Example module.
  */
 
 /**
@@ -73,16 +72,29 @@ function page_example_permission() {
 function page_example_menu() {
 
   // This is the minimum information you can provide for a menu item. This menu
-  // item will be created in the Primary Navigation (main-menu).
-  $items['examples/page_example'] = array(
-    'title' => 'Page Example',
+  // item will be created in the default internal menu, which is invisible in the 
+  // user interface.
+  $items['examples/page_menu_internal'] = array(
+    'title' => 'Page Menu Internal',
+    'page callback' => 'page_example_description',
+    'access callback' => TRUE,
+    'expanded' => TRUE,
+  );
+
+  // You can add a menu item to a specific menu. In this case, we will add it
+  // to the primary navigation (main-menu).
+
+  $items['examples/page_menu_visible'] = array(
+    'title' => 'Page Menu Visible',
     'menu_name' => 'main-menu',
     'page callback' => 'page_example_description',
     'access callback' => TRUE,
     'expanded' => TRUE,
   );
 
-  $items['examples/page_example/simple'] = array(
+  // Here is how to create a child item.
+
+  $items['examples/page_menu_visible/simple'] = array(
     'title' => 'Simple - no arguments',
     'page callback' => 'page_example_simple',
     'access arguments' => array('access simple page'),
@@ -97,7 +109,7 @@ function page_example_menu() {
   // would be replaced by 'example', a 1 by 'page_example', and a 2 by
   // 'arguments.' 3 and 4 will be replaced by whatever the user provides.
   // These will be passed as arguments to the page_example_arguments() function.
-  $items['examples/page_example/arguments/%/%'] = array(
+  $items['examples/page_menu_visible/arguments/%/%'] = array(
     'page callback' => 'page_example_arguments',
     'page arguments' => array(3, 4),
     'access arguments' => array('access arguments page'),
@@ -117,8 +129,8 @@ function page_example_description() {
     '#markup' =>
     t('<p>WORKING IN BACKDROP: The page_example provides two pages, "simple" and "arguments".</p><p>The <a href="@simple_link">simple page</a> just returns a renderable array for display.</p><p>The <a href="@arguments_link">arguments page</a> takes two arguments and displays them, as in @arguments_link</p>',
       array(
-        '@simple_link' => url('examples/page_example/simple', array('absolute' => TRUE)),
-        '@arguments_link' => url('examples/page_example/arguments/23/56', array('absolute' => TRUE)),
+        '@simple_link' => url('examples/page_menu_visible/simple', array('absolute' => TRUE)),
+        '@arguments_link' => url('examples/page_menu_visible/arguments/23/56', array('absolute' => TRUE)),
       )
     ),
   );
@@ -145,18 +157,17 @@ function page_example_simple() {
  *
  * This callback is mapped to the path 'examples/page_example/arguments/%/%'.
  *
- * The % arguments are passed in from the page URL. In our hook_menu
- * implementation we instructed the menu system to extract the last two
- * parameters of the path and pass them to this function as arguments.
+ * The % arguments are passed in from the page URL. In our hook_menu()
+ * implementation, we instructed the menu system to extract the last two
+ * parameters from the path and pass them to this function as arguments.
  *
  * This function also demonstrates a more complex render array in the returned
- * values. Instead of just rendering the HTML with a theme('item_list'), the
- * list is left unrendered, and a #theme attached to it so that it can be
- * rendered as late as possible, giving more parts of the system a chance to
- * change it if necessary.
+ * values. Instead of just rendering the HTML with a theme('item_list'), a
+ * #theme is attached to the list so that it can be rendered as late as
+ * possible, giving to other parts of the system a chance to change it if
+ * necessary.
  *
- * Consult @link http://DOCUMENTATION_PENDING Render Arrays documentation
- * @endlink for details.
+ * See backdrop_render() for further details.
  */
 function page_example_arguments($first, $second) {
   // Make sure you don't trust the URL to be safe! Always check for exploits.

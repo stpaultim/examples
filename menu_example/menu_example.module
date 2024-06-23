@@ -28,7 +28,7 @@
 function menu_example_menu() {
   // Menu items are defined by placing them in an $items array. The array key
   // (in this case 'menu_example') is the path that defines the menu router
-  // entry, so the page will be accessible from the URL
+  // entry, so the page will be accessible from the following URL
   // example.com/examples/menu_example.
   $items['examples/menu_example'] = array(
     // We are using the default menu type, so this can be omitted.
@@ -39,9 +39,14 @@ function menu_example_menu() {
     // in the 'menu_example/title_callbacks' example below.
     'title' => 'Menu Example',
 
+    // Unless a 'menu_name' is assigned. Menu items will be assigned to an 
+    // invisible internal menu. This menu item will be assigned to the primary
+    // navigation menu (main-menu).
+    'menu_name' => 'main-menu',
+
     // Description (hover flyover for menu link). Does NOT use t(), which is
     // called automatically.
-    'description' => 'Simplest possible menu type, and the parent menu entry for others',
+    'description' => 'Simplest possible menu link that is not visible to anyone yet.',
 
     // Function to be called when this path is accessed.
     'page callback' => '_menu_example_basic_instructions',
@@ -67,30 +72,23 @@ function menu_example_menu() {
     'expanded' => TRUE,
   );
 
-  // Show a menu link in a menu other than the default "Navigation" menu.
-  // The menu must already exist.
-  $items['examples/menu_example_alternate_menu'] = array(
-    'title' => 'Menu Example: Menu in alternate menu',
-
-    // Machine name of the menu in which the link should appear.
-    'menu_name' => 'user-menu',
-
+  // Unless otherwise specified, menu items are assigned to the invisible
+  // internal menu. This link is accessible, but not visible due to lack of
+  // any 'menu_name' or visible parent menu. Below, this and all other $items
+  // will be added to the menu_example_menu created by this module.
+  $items['examples/menu_example_internal'] = array(
+    'title' => 'Menu Example Internal',
     'page callback' => '_menu_example_menu_page',
-    'page arguments' => array(t('This will be in the Primary Links menu instead of the default Navigation menu')),
+    'page arguments' => array(t('A simple menu item assigned to the invisible intenal menu.')),
     'access callback' => TRUE,
+    'expanded' => TRUE,
   );
 
   // A menu entry with simple permissions using user_access().
   //
   // First, provide a courtesy menu item that mentions the existence of the
   // permissioned item.
-  $items['examples/menu_example/permissioned'] = array(
-    'title' => 'Permissioned Example',
-    'page callback' => '_menu_example_menu_page',
-    'page arguments' => array(t('A menu item that requires the "access protected menu example" permission is at <a href="!link">examples/menu_example/permissioned/controlled</a>', array('!link' => url('examples/menu_example/permissioned/controlled')))),
-    'access callback' => TRUE,
-    'expanded' => TRUE,
-  );
+
 
   // Now provide the actual permissioned menu item.
   $items['examples/menu_example/permissioned/controlled'] = array(
@@ -311,6 +309,10 @@ function menu_example_menu() {
     'access callback' => TRUE,
     'weight' => 80,
   );
+
+  // This statement adds each of the $items to the new menu-example-menu
+  // that was created by this module. This menu is intially not visible, but
+  // may be placed in any layout and will then display all of these links.
   foreach ($items as $path => $item) {
     if (!isset($item['menu_name'])) {
       $items[$path]['menu_name'] = 'menu-example-menu';
